@@ -1,15 +1,7 @@
 import React, {useState,useEffect} from 'react';
-
+import "./Form.css";
 
 const Form = () => {
-    // const validateform=(e)=>{
-    //   e.preventDefault();
-    //   formerror(error());
-    // }
-
-    // const error=()=>{
-
-    // }
 
     const initialvalues={
         name:"",
@@ -21,13 +13,11 @@ const Form = () => {
         gender:"",
         residence:"",
     }
-    // const navigate=useNavigate();
+
     const [formvalues,setformvalues]=useState(initialvalues);
     const [formerror,setformerror]=useState({});
     const [noerror,setnoerror]=useState(false);
-    // const[iscredentials,setIscredentials]=useState(false);
     const [submitcall,setSubmitcall]=useState(false);
-    // const [loading,setLoading]=useState(false);
 
     const inputHandler=(e)=>{
         const {name,value}=e.target;
@@ -36,12 +26,15 @@ const Form = () => {
     const error=()=>{
         const errors={}
         setnoerror(true);
+
+        //REGEX CONDITIONS
+
         const regex_name=/^[a-zA-Z]{3,15}(\s[a-zA-Z]{2,10})?$/;
         const regex_contact= /^[6-9]([0-9]){9}$/;
         const regex_roll=/^[2][12][0][0][2][7][01]([0-9]){6}$/;
-        const regex_email=/^[]$/
+        const regex_email=/^([a-z]){3,15}([0-9]){7,10}@akgec.ac.in$/;
         
-
+        //VALIDATING NAME
         if(regex_name.test(formvalues.name.trim())){
           formvalues.name=formvalues.name.trim();
           errors.name="";
@@ -51,17 +44,7 @@ const Form = () => {
           errors.name="error in name";
         }
 
-        
-        if(regex_contact.test(formvalues.contact.trim())){
-            errors.contact="";
-            formvalues.contact=formvalues.contact.trim();
-        }
-        else{
-            setnoerror(false)
-            errors.contact="**Invalid Mobile Number";
-        }
-
-
+        //VALIDATING ROLLNO
         if(regex_roll.test(formvalues.roll.trim())){
           errors.roll="";
           formvalues.roll=formvalues.roll.trim();
@@ -71,7 +54,27 @@ const Form = () => {
           errors.roll="Invalid roll no"
         }
 
+        //VALIDATING CONTACT
+        if(regex_contact.test(formvalues.contact.trim())){
+            errors.contact="";
+            formvalues.contact=formvalues.contact.trim();
+        }
+        else{
+            setnoerror(false)
+            errors.contact="**Invalid Mobile Number";
+        }
 
+        //VALIDATING EMAIL
+        if(regex_email.test(formvalues.email.trim())){
+          errors.email="";
+          formvalues.email=formvalues.email.trim();
+        }
+        else{
+          setnoerror(false);
+          errors.email="invalid email";
+        }
+
+        //VALIDATING BRANCH
         if(formvalues.branch==""){
           setnoerror(false);
           errors.branch="Select branch";
@@ -80,6 +83,7 @@ const Form = () => {
           errors.branch="";
         }
 
+        //VALIDATING YEAR
         if(formvalues.year==""){
           setnoerror(false);
           errors.year="Select Year";
@@ -88,6 +92,7 @@ const Form = () => {
           errors.year="";
         }
   
+        //VALIDATING GENDER
         if(formvalues.gender==""){
           setnoerror(false);
           errors.gender="Select gender";
@@ -96,6 +101,7 @@ const Form = () => {
           errors.gender="";
         }
 
+        //VALIDATING RESIDENCE
         if(formvalues.residence==""){
           setnoerror(false);
           errors.residence="Select residence";
@@ -170,7 +176,7 @@ const Form = () => {
 
            <div className='email-sec'>
               <input type="text" placeholder="Email" name="email" value={formvalues.email} onChange={inputHandler}/>
-              {/* <p>Error</p> */}
+              <p>{formerror.email}</p>
            </div>
 
            <div className='branch-sec'>

@@ -36,9 +36,10 @@ const Form = () => {
     const error=()=>{
         const errors={}
         setnoerror(true);
-        const regex_name=/^[a-zA-Z]{3,15}(\s[a-zA-Z]{2,10})?$/
+        const regex_name=/^[a-zA-Z]{3,15}(\s[a-zA-Z]{2,10})?$/;
         const regex_contact= /^[6-9]([0-9]){9}$/;
-        
+        const regex_roll=/^[2][12][0][0][2][7][01]([0-9]){6}$/;
+        const regex_email=/^[]$/
         
 
         if(regex_name.test(formvalues.name.trim())){
@@ -51,13 +52,25 @@ const Form = () => {
         }
 
         
-        if(regex_contact.test(formvalues.contact)){
+        if(regex_contact.test(formvalues.contact.trim())){
             errors.contact="";
+            formvalues.contact=formvalues.contact.trim();
         }
         else{
             setnoerror(false)
             errors.contact="**Invalid Mobile Number";
         }
+
+
+        if(regex_roll.test(formvalues.roll.trim())){
+          errors.roll="";
+          formvalues.roll=formvalues.roll.trim();
+        }
+        else{
+          setnoerror(false);
+          errors.roll="Invalid roll no"
+        }
+
 
         if(formvalues.branch==""){
           setnoerror(false);
@@ -147,7 +160,7 @@ const Form = () => {
 
            <div className='roll-sec'>
               <input type="text" placeholder="University Roll No." name='roll' value={formvalues.roll} onChange={inputHandler}/>
-              {/* <p>Error</p> */}
+              <p>{formerror.roll}</p>
            </div>
 
            <div className='contact-sec'>

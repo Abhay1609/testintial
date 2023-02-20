@@ -1,5 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import "./Form.css";
+import axios from 'axios';
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Form = () => {
 
@@ -19,6 +21,7 @@ const Form = () => {
     const [formerror,setformerror]=useState({});
     const [noerror,setnoerror]=useState(false);
     const [submitcall,setSubmitcall]=useState(false);
+    const [captcha_value,setcaptcha_value]=useState("");
 
     const inputHandler=(e)=>{
         const {name,value}=e.target;
@@ -34,9 +37,10 @@ const Form = () => {
         const regex_contact= /^[6-9]([0-9]){9}$/;
         const regex_roll=/^[2][12][0][0][2][7][01]([0-9]){6}$/;
         const regex_student=/^[2][12]([0-9]){5,6}$/;
-        const regex_email=/^([a-z]){3,15}([0-9]){7,10}@akgec.ac.in$/;
+        const regex_email=/^([a-z]){3,15}[2][12]([0-9]){5,6}@akgec.ac.in$/;
         
         //VALIDATING NAME
+
         if(regex_name.test(formvalues.full_name.trim())){
           formvalues.full_name=formvalues.full_name.trim();
           errors.full_name="";
@@ -44,10 +48,11 @@ const Form = () => {
         else{
           setnoerror(false);
           errors.full_name="error in name";
-          return errors;
+        
         }
 
         //VALIDATING STUDENTNO
+
         if(regex_student.test(formvalues.student_no.trim())){
           errors.student_no="";
           formvalues.student_no=formvalues.student_no.trim();
@@ -55,10 +60,11 @@ const Form = () => {
         else{
           setnoerror(false);
           errors.student_no="Invalid Student no";
-          return errors;
+          
         }
 
         //VALIDATING ROLLNO
+
         if(regex_roll.test(formvalues.roll_no.trim())){
           errors.roll_no="";
           formvalues.roll_no=formvalues.roll_no.trim();
@@ -66,10 +72,11 @@ const Form = () => {
         else{
           setnoerror(false);
           errors.roll_no="Invalid roll no";
-          return errors;
+          
         }
 
         //VALIDATING CONTACT
+
         if(regex_contact.test(formvalues.mobile_number.trim())){
             errors.mobile_number="";
             formvalues.mobile_number=formvalues.mobile_number.trim();
@@ -77,10 +84,11 @@ const Form = () => {
         else{
             setnoerror(false)
             errors.mobile_number="**Invalid Mobile Number";
-            return errors;
+            
         }
 
         //VALIDATING EMAIL
+
         if(regex_email.test(formvalues.email.trim())){
           errors.email="";
           formvalues.email=formvalues.email.trim();
@@ -88,14 +96,15 @@ const Form = () => {
         else{
           setnoerror(false);
           errors.email="invalid email";
-          return errors;
+          
         }
 
         //VALIDATING BRANCH
+
         if(formvalues.branch==""){
           setnoerror(false);
           errors.branch="Select branch";
-          return errors;
+          
         }
         else{
           errors.branch="";
@@ -103,10 +112,11 @@ const Form = () => {
         }
 
         //VALIDATING YEAR
+
         if(formvalues.year==""){
           setnoerror(false);
           errors.year="Select Year";
-          return errors;
+          
         }
         else{
           errors.year="";
@@ -114,10 +124,11 @@ const Form = () => {
         }
   
         //VALIDATING GENDER
+
         if(formvalues.gender==""){
           setnoerror(false);
           errors.gender="Select gender";
-          return errors;
+          
         }
         else{
           errors.gender="";
@@ -125,10 +136,11 @@ const Form = () => {
         }
 
         //VALIDATING RESIDENCE
+        
         if(formvalues.residence==""){
           setnoerror(false);
           errors.residence="Select residence";
-          return errors;
+          
         }
         else{
           errors.residence="";
@@ -151,35 +163,37 @@ const Form = () => {
 
     useEffect(()=>{
         if(noerror==true){
-            // setLoading(true);
-            // axios.post("https://web-production-0189.up.railway.app/accounts/login/",{
-            //     mobile_number:formvalues.mobile_number,
-            //     password:formvalues.password
-            // }).then((res)=>{
-            //     console.log(res)
-            //     profile_data.id=res.data.profile_data.id;
-            //     profile_data.name=res.data.profile_data.full_name;
-            //     profile_data.age=res.data.profile_data.age;
-            //     profile_data.mobile_no=res.data.profile_data.mobile_number;
-            //     profile_data.email=res.data.profile_data.email;
-            //     console.log(profile_data);
-            //     localStorage.setItem("login","active");
-            //     localStorage.setItem("profile_id",profile_data.id);
-            //     localStorage.setItem("profile_name",profile_data.name);
-            //     setLoading(false);
-            //     navigate("/home");
-            // }).catch((err)=>{
-            //     console.log(err);
-            //     setLoading(false);
-            //     setIscredentials(true);
-            //     setTimeout(()=>{
-            //         setIscredentials(false);
-            //     },3000)
-            // })
+          if(captcha_value==""){
+            alert("gi")
+          }
+          else{
+            axios.post("https://registrationcsi-production.up.railway.app/accounts/register/",{
+              
+                mobile_number: formvalues.mobile_number,
+                email: formvalues.email,
+                full_name: formvalues.full_name,
+                roll_no: formvalues.roll_no,
+                student_no: formvalues.student_no,
+                gender: formvalues.gender,
+                residence:formvalues.residence,
+                year: formvalues.year,
+                branch: formvalues.branch,
+                recaptcha:captcha_value,
+              
+            }).then((res)=>{
+                console.log(res);
+            }).catch((err)=>{
+                console.log(err);
+            })
             console.log(formvalues);
         }
+      }
     },[submitcall])
 
+    function validate_captcha(value){
+      console.log(value);
+      setcaptcha_value(value);
+    }
 
   return (
     <div>
@@ -256,6 +270,17 @@ const Form = () => {
              </div>
              <p>{formerror.residence}</p>
            </div>
+
+           <div className="checkbox">
+            <div className='captcha recaptcha'>
+            <ReCAPTCHA
+               sitekey="6Lc86JkkAAAAAPwlOuUOdxwOk-wmN2zztWdsE8UZ"
+               onChange={validate_captcha}
+            />
+             
+            </div>
+          
+          </div>
 
            <input type='submit'/>
         </form>

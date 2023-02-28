@@ -35,9 +35,10 @@ const Form = () => {
 
         const regex_name=/^[a-zA-Z]{3,15}(\s[a-zA-Z]{2,10})?$/;
         const regex_contact= /^[6-9]([0-9]){9}$/;
-        const regex_roll=/^[2][12][0][0][2][7][01]([0-9]){6}$/;
-        const regex_student=/^[2][12]([0-9]){5,6}$/;
-        const regex_email=/^([a-z]){3,15}[2][12]([0-9]){5,6}@akgec.ac.in$/;
+        const regex_roll=/^([0-9]){6}$/;
+        const regex_student=/^([0-9]){6}$/;
+        const regex_email=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
         
         //VALIDATING NAME
 
@@ -194,10 +195,19 @@ const Form = () => {
       console.log(value);
       setcaptcha_value(value);
     }
+    const alterfunction =()=>{
+      // alert("Form submitted");
+      let btnreset =document.querySelector('button');
+      let input =document.querySelectorAll('input');
+      btnreset.addEventListener('click' ,()=>{
+        input.forEach(input => input.value =' ');
+      });
+    }
 
   return (
     <div>
         <form onSubmit={validateform}>
+          <h1>Student number and Rollno must be 6 digit and all Entry Unique</h1>
             <div className='name-sec'>
               <input type="text" placeholder="Name" name="full_name" value={formvalues.full_name} onChange={inputHandler}/>
               <p>{formerror.full_name}</p>
@@ -282,7 +292,8 @@ const Form = () => {
           
           </div>
 
-           <input type='submit'/>
+           <input type='submit'   onClick={alterfunction} />
+           <input type="reset" />
         </form>
     </div>
   )
